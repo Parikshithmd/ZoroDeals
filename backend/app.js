@@ -1,49 +1,51 @@
 import express from 'express';
-import cors from 'cors'; 
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
+import path from 'path';
+import dotenv from 'dotenv';
+
 import product from './routes/productRoutes.js';
 import user from './routes/userRoutes.js';
 import order from './routes/orderRoutes.js';
 import payment from './routes/paymentRoutes.js';
-import errorHandleMiddleware  from './middleware/error.js';
-import cookieParser from 'cookie-parser';
-import fileUpload from 'express-fileupload';
-import dotenv from 'dotenv'
-import path from "path";
+import errorHandleMiddleware from './middleware/error.js';
 
-const app=express();
+dotenv.config({ path: './config/config.env' });
 
+const app = express();
+const __dirname = path.resolve();
+
+// ✅ CORS
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://zorodeals-frontends.onrender.com' // frontend
+    'https://zorodeals-frontends.onrender.com'
   ],
   credentials: true
 }));
 
-// Middleware
-app.use(express.json())
-app.use(cookieParser())
-app.use(fileUpload())
+// ✅ Body parsers
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(fileUpload());
 
-// Route
-app.use("/api/v1",product)
-app.use("/api/v1",user)
-app.use("/api/v1",order)
-app.use("/api/v1",payment)
+// ✅ API routes
+app.use('/api/v1', product);
+app.use('/api/v1', user);
+app.use('/api/v1', order);
+app.use('/api/v1', payment);
 
-app.use(errorHandleMiddleware)
-dotenv.config({path:'./config/config.env'})
+// ✅ Serve frontend
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
 
-
-
-
-const __dirname = path.resolve();
-
-app.use(express.static(path.join(__dirname, "frontend/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend/dist/index.html"));
+// ✅ SPA fallback (
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'frontend/dist/index.html'));
 });
+
+
+app.use(errorHandleMiddleware);
 
 export default app;
