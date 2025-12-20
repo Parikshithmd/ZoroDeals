@@ -53,7 +53,7 @@ export const deleteProduct=createAsyncThunk('admin/deleteProduct',async(productI
       
         const {data}=await api.delete(`/admin/product/${productId}`)
 
-        return {productId};
+        return productId;
     }catch(error){
         return rejectWithValue(error.response?.data ||"Product Deletion Failed")
     }
