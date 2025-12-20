@@ -1,6 +1,6 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
 
-import api from '../../api/api';
+import api from '../../api';
 
 // Register API
 export const register=createAsyncThunk('user/register',async (userData,{rejectWithValue})=>{
