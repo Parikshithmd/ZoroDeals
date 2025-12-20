@@ -13,7 +13,7 @@ export const getProduct=createAsyncThunk('product/getProduct',async({keyword,pag
         }
     //     const link=keyword?`/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}`:
     // `/api/v1/products?page=${page}`;
-        const {data}=await axios.get(link)
+        const { data } = await api.get(link);
         return data
         
     }catch(error){
