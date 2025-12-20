@@ -1,5 +1,6 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../../api';
+
 
 //Creating Order
 
@@ -10,7 +11,8 @@ export const createOrder= createAsyncThunk('order/createOrder',async(order,{reje
                 'Content-Type':'application/json'
             }
         }
-        const {data}=await axios.post('/api/v1/new/order',order,config)
+        const {data}=await api.post('/new/order', order, config)
+
         return data;
         
     }catch(error){
@@ -21,7 +23,8 @@ export const createOrder= createAsyncThunk('order/createOrder',async(order,{reje
 //Get User Orders
 export const getAllMyOrders= createAsyncThunk('order/getAllMyOrders',async(_,{rejectWithValue})=>{
     try{
-        const {data}=await axios.get('/api/v1/orders/user')
+        const {data}=await api.get('/orders/user')
+
         return data;
     }catch(error){
         return rejectWithValue(error.response?.data || 'Failed to fetch orders')
@@ -31,7 +34,8 @@ export const getAllMyOrders= createAsyncThunk('order/getAllMyOrders',async(_,{re
 //Get Order Details
 export const getOrderDetails= createAsyncThunk('order/getOrderDetails',async(orderID,{rejectWithValue})=>{
     try{
-        const {data}=await axios.get(`/api/v1/order/${orderID}`)
+        const {data}=await api.get(`/order/${orderID}`)
+
         return data;
     }catch(error){
         return rejectWithValue(error.response?.data || 'Failed to fetch order details')
@@ -55,7 +59,7 @@ const orderSlice=createSlice({
             state.success=null
         }
     },
-    extraReducers:(builder)=>[
+    extraReducers:(builder)=>{
         builder
         .addCase(createOrder.pending,(state)=>{
             state.loading=true,
@@ -89,8 +93,8 @@ const orderSlice=createSlice({
          //Get Order Details
          builder
          .addCase(getOrderDetails.pending,(state)=>{
-             state.loading=true,
-             state.error=null
+             state.loading=true;
+             state.error=null;
          })
          .addCase(getOrderDetails.fulfilled,(state,action)=>{
              state.loading=false,
@@ -101,7 +105,7 @@ const orderSlice=createSlice({
               state.loading=false,
              state.error=action.payload?.message ||'Failed to fetch order details'
          })
-    ]
+        }
 })
 export const {removeErrors,removeSuccess}=orderSlice.actions;
 export default orderSlice.reducer;
