@@ -45,10 +45,13 @@ export const loginUser=handleAsyncError(async(req , res, next)=>{
 
 // /Logout
 export const logout=handleAsyncError(async(req , res , next)=>{
-    res.cookie('token',null,{
-        expires:new Date(Date.now()),
-        httpOnly:true
-    })
+   res.cookie("token", null, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  expires: new Date(0),
+});
+
     res.status(200).json({
         success: true,
         message:"Successfully Logged out"
