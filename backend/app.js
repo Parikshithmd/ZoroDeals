@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors'; 
 import product from './routes/productRoutes.js';
 import user from './routes/userRoutes.js';
 import order from './routes/orderRoutes.js';
@@ -8,6 +9,14 @@ import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import dotenv from 'dotenv'
 const app=express();
+
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://zorodeals-frontends.onrender.com' // frontend
+  ],
+  credentials: true
+}));
 
 // Middleware
 app.use(express.json())
