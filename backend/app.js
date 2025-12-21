@@ -20,7 +20,7 @@ const __dirname = path.resolve();
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://zorodeals-frontends.onrender.com'
+    'https://zorodealss.onrender.com'
   ],
   credentials: true
 }));
